@@ -2,15 +2,15 @@ var options = {
     startTime:6,
     endTime:22
 }
-
+//update time slots when rendering the page
 function updateTimeSlots(){
     var currentTime=moment().hour();
     $('.time-block').each(function(index,element){
      var hour = $(element).attr('data-hour');
-     if(hour<currentHour){
+     if(hour<currentTime){
         $(element).find('.description').addClass('past');
      }
-     else if(hour==currentHour){
+     else if(hour==currentTime){
       $(element).find('.description').addClass('present');
 
      }
@@ -21,17 +21,28 @@ function updateTimeSlots(){
     });
    
 }
+ // Save the task user has entered
+function onSaveTask(e){
+    var hour=$(e.target).parent().parent().attr('data-hour');
+    var task=$(e.target).parent().prev().children().val();
+
+    localStorage.setItem(hour,task);
+    console.log('saved');
+}
+
+//generate timeslots,textarea and savebutton for the page
+
 function generateTimeslots(){
-    for(var hour=startTime;hour<=endTime;hour++){
+    for(var hour=options.startTime;hour<=options.endTime;hour++){
         //load items from local storage
         var storedTask=localStorage.getItem(hour);
 
         var timeSlot=$('<div>').addClass('row time-block');
         timeSlot.attr('data-hour',hour);
 
-        var hourSlot=$('<div').addClass('col-sm-3 hour')
+        var hourSlot=$('<div>').addClass('col-sm-2 hour');
         hourSlot.text(moment(hour ,'h').format('h A'));
-        var description=$('<div').addClass('col-sm-8 row');
+        var description=$('<div>').addClass('col-sm-8 row');
         var textArea=$('<textarea>').addClass('col-md-12 description');
         textArea.val(storedTask);
 
@@ -47,7 +58,7 @@ function generateTimeslots(){
         $('.container').append(timeSlot);
     }
 }
-
+//initialises the page
 function init(){
     
     generateTimeslots();
