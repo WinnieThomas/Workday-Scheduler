@@ -4,6 +4,21 @@ var options = {
 }
 
 function updateTimeSlots(){
+    var currentTime=moment().hour();
+    $('.time-block').each(function(index,element){
+     var hour = $(element).attr('data-hour');
+     if(hour<currentHour){
+        $(element).find('.description').addClass('past');
+     }
+     else if(hour==currentHour){
+      $(element).find('.description').addClass('present');
+
+     }
+     else{
+        $(element).find('.description').addClass('future');
+     }
+
+    });
    
 }
 function generateTimeslots(){
@@ -22,12 +37,22 @@ function generateTimeslots(){
 
         var saveContainer=$('<div>').addClass('col-sm-2 saveBtn d-flex justify=content-centre');
         saveContainer.on('click',onSaveTask);
+        var saveButton=$('<i>').addClass('fas fa-save');
+
+        timeSlot.append(hourSlot);
+        timeSlot.append(description);
+        description.append(textArea);
+        timeSlot.append(saveContainer);
+        saveContainer.append(saveButton);
+        $('.container').append(timeSlot);
     }
 }
 
 function init(){
-    updateTimeSlots();
+    
     generateTimeslots();
+
+    updateTimeSlots();
     var CurrentDayTime = moment().format('dddd MMMM Do YYYY ,h:mm:ss a');
     $('#currentDay').text(CurrentDayTime);
 
